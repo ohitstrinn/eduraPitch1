@@ -1,0 +1,21 @@
+.token-shower {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+  background-size: 40px;
+  animation: fall 1s infinite linear;
+  opacity: 0.5;
+}
+
+@keyframes fall {
+  0% {
+    background-position: top center;
+  }
+  100% {
+    background-position: bottom center;
+  }
+}
