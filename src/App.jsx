@@ -1,60 +1,47 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useApp } from "./context/AppContext";
 
-import Subscription from "./pages/Subscription";
-import BookTrading from "./pages/BookTrading";
-import AIStudyTools from "./pages/AIStudyTools";
-import Library from "./pages/Library";
-import InstitutionHub from "./pages/InstitutionHub";
-import StudentHub from "./pages/StudentHub";
-import DeliverySimulator from "./pages/DeliverySimulator";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import FacultyDashboard from "./pages/FacultyDashboard";
-import Gamification from "./pages/Gamification";
+import SyllabusUpload from "./pages/SyllabusUpload";
+import StudyPlan from "./pages/StudyPlan";
+import Chat from "./pages/Chat";
+import FounderLogin from "./pages/FounderLogin";
+import FounderDashboard from "./pages/FounderDashboard";
+import PitchDeck from "./pages/PitchDeck";
+import DemoMode from "./pages/DemoMode";
+import SchoolDirectory from "./pages/SchoolDirectory";
 
-import BottomNav from "./components/BottomNav";
-import EducatorNav from "./components/EducatorNav";
+function RequireAuth({ children, role }) {
+  const { userType } = useApp();
+  if (!userType) return <Navigate to="/login" replace />;
+  if (role && userType !== role) return <Navigate to="/" replace />;
+  return children;
+}
 
 export default function App() {
-  const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("userType");
-    setIsLoggedIn(!!storedUser);
-    setUserType(storedUser);
-  }, [location]);
-
-  const isStudent = userType === "student";
-  const isEducator = userType === "educator";
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col pb-16">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/subscription" element={<Subscription />} />
+    <Routes>
+      {/* Public */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/founder" element={<FounderLogin />} />
 
-        {/* Student Routes */}
-        <Route path="/dashboard" element={isStudent ? <Dashboard /> : <Navigate to="/" />} />
-        <Route path="/book-trading" element={isStudent ? <BookTrading /> : <Navigate to="/" />} />
-        <Route path="/study-tools" element={isStudent ? <AIStudyTools /> : <Navigate to="/" />} />
-        <Route path="/library" element={isStudent ? <Library /> : <Navigate to="/" />} />
-        <Route path="/student" element={isStudent ? <StudentHub /> : <Navigate to="/" />} />
-        <Route path="/delivery" element={isStudent ? <DeliverySimulator /> : <Navigate to="/" />} />
-        <Route path="/gamification" element={isStudent ? <Gamification /> : <Navigate to="/" />} />
+      {/* Student */}
+      <Route path="/dashboard" element={<RequireAuth role="student"><Dashboard /></RequireAuth>} />
+      <Route path="/syllabus" element={<RequireAuth role="student"><SyllabusUpload /></RequireAuth>} />
+      <Route path="/study" element={<RequireAuth role="student"><StudyPlan /></RequireAuth>} />
+      <Route path="/chat" element={<RequireAuth role="student"><Chat /></RequireAuth>} />
 
-        {/* Educator Routes */}
-        <Route path="/institution" element={isEducator ? <InstitutionHub /> : <Navigate to="/" />} />
-        <Route path="/educator" element={isEducator ? <FacultyDashboard /> : <Navigate to="/" />} />
-      </Routes>
+      {/* Founder */}
+      <Route path="/founder/dashboard" element={<RequireAuth role="founder"><FounderDashboard /></RequireAuth>} />
+      <Route path="/pitch" element={<RequireAuth role="founder"><PitchDeck /></RequireAuth>} />
+      <Route path="/demo" element={<RequireAuth role="founder"><DemoMode /></RequireAuth>} />
+      <Route path="/directory" element={<RequireAuth role="founder"><SchoolDirectory /></RequireAuth>} />
 
-      {/* Bottom Navs */}
-      {isLoggedIn && location.pathname !== "/" && location.pathname !== "/login" && (
-        userType === "student" ? <BottomNav /> : <EducatorNav />
-      )}
-    </div>
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
