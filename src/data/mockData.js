@@ -1,0 +1,123 @@
+export const MOCK_SIGNUPS = [
+  {
+    id: 1,
+    name: 'Alex Rivera',
+    email: 'alex.r@unh.edu',
+    school: 'unh',
+    major: 'STEM',
+    interestLevel: 'high',
+    submittedAt: '2025-06-10T09:23:00Z',
+    notes: 'Very excited about syllabus parsing. Asked about mobile app.',
+    tag: 'early-adopter',
+  },
+  {
+    id: 2,
+    name: 'Jordan Lee',
+    email: 'jlee@snhu.edu',
+    school: 'snhu',
+    major: 'Business',
+    interestLevel: 'medium',
+    submittedAt: '2025-06-11T14:05:00Z',
+    notes: 'Online student, wants async support.',
+    tag: 'online-learner',
+  },
+  {
+    id: 3,
+    name: 'Maria Santos',
+    email: 'm.santos@mccnh.edu',
+    school: 'mcc',
+    major: 'Health',
+    interestLevel: 'high',
+    submittedAt: '2025-06-12T11:30:00Z',
+    notes: 'First-gen student. Very engaged in conversation.',
+    tag: 'first-gen',
+  },
+  {
+    id: 4,
+    name: 'Tyler Nguyen',
+    email: 'tyler.n@nashua.edu',
+    school: 'ncc',
+    major: 'STEM',
+    interestLevel: 'high',
+    submittedAt: '2025-06-12T16:45:00Z',
+    notes: 'Interested in local job connections feature.',
+    tag: 'career-focused',
+  },
+  {
+    id: 5,
+    name: 'Priya Sharma',
+    email: 'p.sharma@unh.edu',
+    school: 'unh',
+    major: 'Humanities',
+    interestLevel: 'medium',
+    submittedAt: '2025-06-13T08:00:00Z',
+    notes: 'Graduate student. Wants research-specific tools.',
+    tag: 'graduate',
+  },
+  {
+    id: 6,
+    name: 'Carlos Mendes',
+    email: 'c.mendes@snhu.edu',
+    school: 'snhu',
+    major: 'Education',
+    interestLevel: 'low',
+    submittedAt: '2025-06-13T10:22:00Z',
+    notes: 'Curious but not sure about pricing.',
+    tag: 'price-sensitive',
+  },
+  {
+    id: 7,
+    name: 'Rachel Kim',
+    email: 'rachel.k@mccnh.edu',
+    school: 'mcc',
+    major: 'Undeclared',
+    interestLevel: 'high',
+    submittedAt: '2025-06-14T13:15:00Z',
+    notes: 'Transfer student. Loves the school-specific angle.',
+    tag: 'transfer',
+  },
+  {
+    id: 8,
+    name: 'Devon Walsh',
+    email: 'dwalsh@nashua.edu',
+    school: 'ncc',
+    major: 'Business',
+    interestLevel: 'medium',
+    submittedAt: '2025-06-14T15:40:00Z',
+    notes: 'Part-time student, working full time.',
+    tag: 'working-student',
+  },
+];
+
+export const MOCK_STATS = {
+  totalSignups: 8,
+  bySchool: { unh: 2, snhu: 2, mcc: 2, ncc: 2 },
+  byMajor: { STEM: 2, Business: 2, Health: 1, Humanities: 1, Education: 1, Undeclared: 1 },
+  byInterest: { high: 4, medium: 3, low: 1 },
+  weeklyGrowth: 14,
+};
+
+export const MOCK_CHAT_MESSAGES = [
+  {
+    id: 1,
+    role: 'assistant',
+    content: 'Hi! I\'m your Stemara study assistant. What can I help you with today?',
+    timestamp: new Date().toISOString(),
+  },
+];
+
+export const MAJORS = [
+  { id: 'stem', label: 'STEM', description: 'Science, Technology, Engineering, Math' },
+  { id: 'business', label: 'Business', description: 'Business, Finance, Marketing' },
+  { id: 'humanities', label: 'Humanities', description: 'English, History, Philosophy' },
+  { id: 'health', label: 'Health', description: 'Nursing, Healthcare, Medical' },
+  { id: 'education', label: 'Education', description: 'Teaching, Early Childhood, Ed Leadership' },
+  { id: 'undeclared', label: 'Undeclared', description: 'Still exploring options' },
+  { id: 'other', label: 'Other', description: 'Something else entirely' },
+];
+
+export const INTEREST_LEVELS = [
+  { id: 'high', label: 'Very Interested', description: 'I want early access and updates', color: 'green' },
+  { id: 'medium', label: 'Somewhat Interested', description: 'Tell me more first', color: 'yellow' },
+  { id: 'low', label: 'Just Looking', description: 'Exploring what\'s out there', color: 'gray' },
+];
