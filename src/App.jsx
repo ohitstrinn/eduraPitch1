@@ -1,60 +1,69 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+import { useSchool } from "./context/SchoolContext";
 
-import Subscription from "./pages/Subscription";
-import BookTrading from "./pages/BookTrading";
-import AIStudyTools from "./pages/AIStudyTools";
-import Library from "./pages/Library";
-import InstitutionHub from "./pages/InstitutionHub";
-import StudentHub from "./pages/StudentHub";
-import DeliverySimulator from "./pages/DeliverySimulator";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import FacultyDashboard from "./pages/FacultyDashboard";
-import Gamification from "./pages/Gamification";
+import Landing from "./pages/Landing";
+import StudentAuth from "./pages/StudentAuth";
+import StudentDashboard from "./pages/StudentDashboard";
+import SyllabusUpload from "./pages/SyllabusUpload";
+import StudyRecommendations from "./pages/StudyRecommendations";
+import ChatPage from "./pages/ChatPage";
+import FounderLogin from "./pages/FounderLogin";
+import FounderDashboard from "./pages/FounderDashboard";
+import SchoolDirectory from "./pages/SchoolDirectory";
+import PitchDeck from "./pages/PitchDeck";
+import DemoMode from "./pages/DemoMode";
+import Navbar from "./components/Navbar";
 
-import BottomNav from "./components/BottomNav";
-import EducatorNav from "./components/EducatorNav";
+function ProtectedStudent({ children }) {
+  const { isStudent } = useAuth();
+  return isStudent ? children : <Navigate to="/login" replace />;
+}
+
+function ProtectedFounder({ children }) {
+  const { isFounder } = useAuth();
+  return isFounder ? children : <Navigate to="/founder/login" replace />;
+}
+
+const NO_NAV_ROUTES = ["/", "/login", "/signup", "/founder/login", "/pitch"];
 
 export default function App() {
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("userType");
-    setIsLoggedIn(!!storedUser);
-    setUserType(storedUser);
-  }, [location]);
-
-  const isStudent = userType === "student";
-  const isEducator = userType === "educator";
+  const { user } = useAuth();
+  const showNav = user && !NO_NAV_ROUTES.includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col pb-16">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/subscription" element={<Subscription />} />
+    <div className="min-h-screen flex flex-col">
+      {showNav && <Navbar />}
+      <div className="flex-1">
+        <Routes>
+          {/* Public */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<StudentAuth mode="login" />} />
+          <Route path="/signup" element={<StudentAuth mode="signup" />} />
 
-        {/* Student Routes */}
-        <Route path="/dashboard" element={isStudent ? <Dashboard /> : <Navigate to="/" />} />
-        <Route path="/book-trading" element={isStudent ? <BookTrading /> : <Navigate to="/" />} />
-        <Route path="/study-tools" element={isStudent ? <AIStudyTools /> : <Navigate to="/" />} />
-        <Route path="/library" element={isStudent ? <Library /> : <Navigate to="/" />} />
-        <Route path="/student" element={isStudent ? <StudentHub /> : <Navigate to="/" />} />
-        <Route path="/delivery" element={isStudent ? <DeliverySimulator /> : <Navigate to="/" />} />
-        <Route path="/gamification" element={isStudent ? <Gamification /> : <Navigate to="/" />} />
+          {/* Founder */}
+          <Route path="/founder/login" element={<FounderLogin />} />
+          <Route path="/founder/dashboard" element={<ProtectedFounder><FounderDashboard /></ProtectedFounder>} />
+          <Route path="/demo" element={<ProtectedFounder><DemoMode /></ProtectedFounder>} />
+          <Route path="/pitch" element={<PitchDeck />} />
 
-        {/* Educator Routes */}
-        <Route path="/institution" element={isEducator ? <InstitutionHub /> : <Navigate to="/" />} />
-        <Route path="/educator" element={isEducator ? <FacultyDashboard /> : <Navigate to="/" />} />
-      </Routes>
+          {/* Student */}
+          <Route path="/dashboard" element={<ProtectedStudent><StudentDashboard /></ProtectedStudent>} />
+          <Route path="/syllabus" element={<ProtectedStudent><SyllabusUpload /></ProtectedStudent>} />
+          <Route path="/recommendations" element={<ProtectedStudent><StudyRecommendations /></ProtectedStudent>} />
+          <Route path="/chat" element={<ProtectedStudent><ChatPage /></ProtectedStudent>} />
+          <Route path="/directory" element={<ProtectedStudent><SchoolDirectory /></ProtectedStudent>} />
 
-      {/* Bottom Navs */}
-      {isLoggedIn && location.pathname !== "/" && location.pathname !== "/login" && (
-        userType === "student" ? <BottomNav /> : <EducatorNav />
-      )}
+          {/* Legacy redirects */}
+          <Route path="/study-tools" element={<Navigate to="/recommendations" replace />} />
+          <Route path="/institution" element={<Navigate to="/founder/login" replace />} />
+          <Route path="/educator" element={<Navigate to="/founder/login" replace />} />
+
+          {/* Catch all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </div>
   );
 }
